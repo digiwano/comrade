@@ -33,13 +33,77 @@ main >>>
 
 ## Adding a new command
 
+Add this to the code above:
+
 ```javascript
 comrade.addCommand("sample", {
   run: function(state){ console.log(state); }
 });
 ```
 
-This 
+Running again, we get this:
+
+```
+main >>> sample one two three
+{ rest: 'one two three', restArray: [ 'one', 'two', 'three' ] }
+main >>> 
+```
+
+## Sending output
+
+Inside your command's run() function, there's no reason you shouldn't use
+console.log. However, if you were to console.log() a message while the user
+has a partially typed command on their prompt, you'd mess up their prompt.
+
+Comrade has two methods to get around this. First, it provides a safeOutput()
+method, which clears out the current prompt line, runs your function, and
+re-displays the prompt.
+
+```javascript
+comrade.safeOutput(function(){
+  console.log("HEY DUMMY!");
+});
+```
+
+In addition, comrade provides wrappers around cli.js's .ok/.info/.error functions,
+as well as the more vanilla console.log:
+
+```javascript
+comrade.ok("Everything's Hoopy!");
+comrade.info("something happened");
+comrade.error("noooooooooOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!");
+comrade.log("no special output formatting here");
+```
+
+It is recommended you use these helpers for displaying output to the user. All further
+examples will use this.
+
+## Command arguments
+
+```javascript
+comrade.addCommand("post account message...", {
+  run: function(state) {
+    comrade.ok("Posting a new message as "+ state.account +":");
+    comrade.info("message: " + state.message );
+    comrade.log(state);
+  }
+});
+```
+
+Running again, we get this:
+
+```
+main >>> post digiwano beautiful day - going for a drive
+OK: Posting a new message as digiwano:
+INFO: message: beautiful day - going for a drive
+{ account: 'digiwano', message: 'beautiful day - going for a drive', restArray: [ 'beautiful', 'day', '-', 'going', 'for', 'a', 'drive' ], rest: 'beautiful day - going for a drive' }
+main >>> 
+```
+
+
+## TODO: the rest of tihs section
+
+it really is a beautiful day and if i dont go for a drive like right now i'm going to regret it.
 
 # A simple example
 

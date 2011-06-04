@@ -84,20 +84,22 @@ class Comrade extends EventEmitter
     [structure, rest]
 
   start: ->
-    @i = readline.createInterface @inStream, @outStream, (line) => @complete line
-    @i.on 'line',  (args...) => @processLine args...
-    @i.on 'SIGINT',       () => @processSigint()
-    @i.on 'attemptClose', () => @processAttemptClose()
+    @rli = readline.createInterface @inStream, @outStream, (line) => @complete line
+    @rli.on 'line',  (args...) => @processLine args...
+    @rli.on 'SIGINT',       () => @processSigint()
+    @rli.on 'attemptClose', () => @processAttemptClose()
     @prompt()
 
   safeOutput: (doOutput) ->
-    @i.output.clearLine( )
-    @i.output.cursorTo 0
+    @rli.output.clearLine( )
+    @rli.output.cursorTo 0
     doOutput()
-    @i._refreshLine( )
+    @rli._refreshLine( )
 
   processSigint: ->
     if @mightExit == 'sigint'
+      @safeOutput -> console.log "[ Exiting! ]".yellow
+      @rli.close()
       process.exit()
     else
       @safeOutput -> console.log "[ press ctrl-c again to exit ]".yellow
@@ -105,6 +107,8 @@ class Comrade extends EventEmitter
 
   processAttemptClose: ->
     if @mightExit == 'ctrl-d'
+      @safeOutput -> console.log "[ Exiting! ]".yellow
+      @rli.close()
       process.exit()
     else
       @safeOutput -> console.log "[ press ctrl-d again to exit ]".yellow
@@ -116,8 +120,8 @@ class Comrade extends EventEmitter
     @prompt()
 
   prompt: ->
-    @i.setPrompt @renderPrompt( @currentMode )
-    @i.prompt()
+    @rli.setPrompt @renderPrompt( @currentMode )
+    @rli.prompt()
 
   # complete() and runCommand() are totally un-DRY for now. i apologize. i'll fix later.
   complete: (cmdstr) ->
