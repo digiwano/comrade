@@ -1,7 +1,7 @@
 {
   "name":         "comrade",
-  "description":  "repl-like generic command-line shell interface",
-  "keywords":     ["repl", "command-line", "cli", "shell"],
+  "description":  "repl-like generic readline shell interface",
+  "keywords":     ["repl", "readline", "cli", "shell"],
   "author":       "Rando Christensen <digiwano@gmail.com>",
   "version":      "0.1.0",
   "licenses":     [{

@@ -1,6 +1,6 @@
 
 
-var Comrade = require('comrade').Comrade;
+var Comrade = require('../lib/comrade').Comrade;
 
 comrade = new Comrade({prompt: "Example> "});
 
@@ -8,8 +8,8 @@ var services = ['svc1', 'svc2'];
 var serviceCommands = ['start', 'stop', 'restart'];
 comrade.addCommand("service serviceName serviceCommand serviceArgs...", {
   completers: {
-    serviceName:    function(){ return services;        },
-    serviceCommand: function(){ return serviceCommands; },
+    serviceName:    services,
+    serviceCommand: serviceCommands,
     serviceArgs:    function(state){ comrade.log('state'); return state.serviceCommand == 'start' ? ['graceful'] : null; }
   },
   run: function(state){
@@ -31,10 +31,10 @@ comrade.addCommand("status", {
 
 var accounts = ['one', 'two', 'three'];
 
-comrade.addCommand("post account message", {
+comrade.addCommand("post account message...", {
   completers: { account: accounts },
   run: function(state) {
-    comrade.ok("posting "+ state.message + " to account "+ state.account);
+    comrade.ok( "posting \""+ state.message + "\" to account "+ state.account );
   }
 });
 
