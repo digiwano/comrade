@@ -1,0 +1,24 @@
+{
+  "name":         "comrade",
+  "description":  "repl-like generic command-line shell interface",
+  "keywords":     ["repl", "command-line", "cli", "shell"],
+  "author":       "Rando Christensen <digiwano@gmail.com>",
+  "version":      "0.1.0",
+  "licenses":     [{
+    "type":       "MIT",
+    "url":        ""
+  }],
+  "dependencies": {
+    "cli":    ">=0.3.6",
+    "colors": ">=0.5.0"
+  },
+  "directories" : {
+    "lib" : "./lib"
+  },
+  "main" : "./lib/comrade",
+  "homepage":     "",
+  "repository":   {
+    "type": "git",
+    "url": ""
+  }
+}
