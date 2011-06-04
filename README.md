@@ -113,7 +113,6 @@ copied from examples/basic.js:
 var Comrade = require('comrade').Comrade;
 
 var comrade = new Comrade({prompt: "Example> "});
-```
 
 var services = ['svc1', 'svc2'];
 var serviceCommands = ['start', 'stop', 'restart'];
