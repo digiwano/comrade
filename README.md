@@ -139,7 +139,7 @@ The object returned would be:
       rest: 'one two three' 
     }
 
-A complete
+To illustrate:
 
 ```javascript
 comrade.addCommand("post account message...", {
@@ -151,7 +151,7 @@ comrade.addCommand("post account message...", {
 });
 ```
 
-Running again, we get this:
+When we run this, we get:
 
 ```
 main >>> post digiwano beautiful day - going for a drive
@@ -161,10 +161,27 @@ INFO: message: beautiful day - going for a drive
 main >>> 
 ```
 
+# Tab completion
 
-## TODO: the rest of tihs section
+docs coming soon. see the examples for now 
 
-it really is a beautiful day and if i dont go for a drive like right now i'm going to regret it.
+# Modes
+
+docs coming soon, but in short:
+
+```
+  comrade.addCommand("go", {
+    run: function(){ comrade.log(" in mode 'main' "); }
+  });
+  comrade.addCommand("other", "go", {
+    run: function(){ comrade.log(" in mode 'other' "); }
+  });
+  
+  comrade.mode = 'main';
+  setTimeout(function(){ comrade.mode = 'other' }, 30000); // in 30 seconds, switch to mode 'other'
+  comrade.start();
+
+```
 
 # A simple example
 
