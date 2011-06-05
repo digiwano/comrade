@@ -85,7 +85,8 @@ comrade.safeOutput(function(){
 ```
 
 In addition, comrade provides wrappers around cli.js's .ok/.info/.error functions,
-as well as the more vanilla console.log:
+as well as the more vanilla console.log: (i know this is silly since cli does something
+close-ish to what comrade does, but its temporary :)
 
 ```javascript
 comrade.ok("Everything's Hoopy!");
@@ -180,7 +181,6 @@ docs coming soon, but in short:
   comrade.mode = 'main';
   setTimeout(function(){ comrade.mode = 'other' }, 30000); // in 30 seconds, switch to mode 'other'
   comrade.start();
-
 ```
 
 # A simple example
