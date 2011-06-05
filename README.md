@@ -37,7 +37,7 @@ Add this to the code above:
 
 ```javascript
 comrade.addCommand("sample", {
-  run: function(state){ console.log(state); }
+  run: function(args){ console.log(args); }
 });
 ```
 
@@ -48,6 +48,25 @@ main >>> sample one two three
 { rest: 'one two three', restArray: [ 'one', 'two', 'three' ] }
 main >>> 
 ```
+
+Comrade allows for your shell to have multiple "modes", each mode defining
+its own set of commands. There's an optional first parameter to addCommand
+which allows you to define the named section your program is in. See below
+for details on that but be aware that the following two are equivalent:
+
+
+```javascript
+comrade.addCommand("sample", {
+  run: function(args){ console.log(args); }
+});
+```
+
+```javascript
+comrade.addCommand("main", "sample", {
+  run: function(args){ console.log(args); }
+});
+```
+
 
 ## Sending output
 
@@ -78,14 +97,56 @@ comrade.log("no special output formatting here");
 It is recommended you use these helpers for displaying output to the user. All further
 examples will use this.
 
-## Command arguments
+## Named command arguments
+
+Comrade allows you to provide named arguments to your command using the
+command spec argument. In previous examples this argument has only contained
+the command's name, but this parameter can also be used to specify the arguments
+it takes as well. Named arguments also allow tab completion, explained further
+on.
+
+A command spec string takes a form like one of the following:
+
+    "command_name"
+
+    "command_name argument_one"
+
+    "command_name argument_one argument_two"
+
+    "command_name argument_one argument_two message_text..."
+
+The args object that gets passed in to your run callback contains one key for each named
+argument you passed in, as well as the standard keys 'rest', and 'restArray', containing
+all non-named arguments to your command as both a string and an array.
+
+If the last argument in the spec has ... at the end of its name, it will concatenate all
+further arguments as a string. The argument 'rest' is always an implicit 'rest...' at the
+end of the commandstring, and is always returned.
+
+Re-using this example:
+    "command_name argument_one argument_two message_text..."
+
+If a user had typed:
+    >>> command_name alpha beta one two three
+
+The object returned would be:
+
+    {
+      argument_one: 'alpha', 
+      argument_two: 'beta', 
+      message_text: 'one two three', 
+      restArray: [ 'one', 'two', 'three' ], 
+      rest: 'one two three' 
+    }
+
+A complete
 
 ```javascript
 comrade.addCommand("post account message...", {
-  run: function(state) {
-    comrade.ok("Posting a new message as "+ state.account +":");
-    comrade.info("message: " + state.message );
-    comrade.log(state);
+  run: function(args) {
+    comrade.ok("Posting a new message as "+ args.account + ":");
+    comrade.info("message: " + args.message );
+    comrade.log(args);
   }
 });
 ```
@@ -120,31 +181,31 @@ comrade.addCommand("service serviceName serviceCommand serviceArgs...", {
   completers: {
     serviceName:    services,
     serviceCommand: serviceCommands,
-    serviceArgs:    function(state){ comrade.log('state'); return state.serviceCommand == 'start' ? ['graceful'] : null; }
+    serviceArgs:    function(args){ return args.serviceCommand == 'start' ? ['graceful'] : null; }
   },
-  run: function(state){
-    switch (state.serviceCommand) {
+  run: function(args){
+    switch (args.serviceCommand) {
     case 'start':
-      comrade.ok("starting " + state.serviceName + (state.restArray[0] == 'graceful' ? " gracefully." : "."));
+      comrade.ok("starting " + args.serviceName + (args.restArray[0] == 'graceful' ? " gracefully." : "."));
       break;
     case 'stop':
-      comrade.ok("stopping " + state.serviceName);
+      comrade.ok("stopping " + args.serviceName);
       break;
     default:
-      comrade.ok("wtf", state);
+      comrade.ok("wtf", args);
     }
   }
 });
 comrade.addCommand("status", {
-  run: function(state){ comrade.ok("status is: not so good!") }
+  run: function(args){ comrade.ok("status is: not so good!") }
 });
 
 var accounts = ['one', 'two', 'three'];
 
 comrade.addCommand("post account message...", {
   completers: { account: accounts },
-  run: function(state) {
-    comrade.ok( "posting \""+ state.message + "\" to account "+ state.account );
+  run: function(args) {
+    comrade.ok( "posting \""+ args.message + "\" to account "+ args.account );
   }
 });
 
